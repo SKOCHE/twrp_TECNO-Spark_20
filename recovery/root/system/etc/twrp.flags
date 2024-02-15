@@ -1,0 +1,68 @@
+#
+# mount point    fstype  device                             device2                flags
+
+# Logical ext4 partitions
+/system_root      ext4   /dev/block/mapper/system                flags=backup=0;removable;slotselect
+/system_ext       ext4   /dev/block/mapper/system_ext            flags=backup=0;removable;slotselect
+/vendor           ext4   /dev/block/mapper/vendor                flags=backup=0;removable;slotselect
+/product          ext4   /dev/block/mapper/product               flags=backup=0;removable;slotselect
+
+/system_img       emmc   /dev/block/mapper/system                flags=display="System image";backup=1;flashimg;slotselect
+/system_ext_img   emmc   /dev/block/mapper/system_ext            flags=display="System_ext image";backup=1;flashimg;slotselect
+/vendor_img       emmc   /dev/block/mapper/vendor                flags=display="Vendor image";backup=1;flashimg;slotselect
+/product_img      emmc   /dev/block/mapper/product               flags=display="Product image";backup=1;flashimg;slotselect 
+
+# Logical erofs partitions
+system          /system         erofs                            wait,logical,first_stage_mount
+vendor          /vendor         erofs                            wait,logical,first_stage_mount
+product         /product        erofs                            wait,logical,first_stage_mount
+
+
+/vbmeta_a		    emmc	/dev/block/by-name/vbmeta_a           flags=display="vbmeta";backup=1;flashimg=1
+/vbmeta_system_a    emmc    /dev/block/by-name/vbmeta_system_a    flags=backup=1;display="vbmeta_system";flashimg=1
+/vbmeta_vendor_a    emmc    /dev/block/by-name/vbmeta_vendor_a    flags=backup=1;display="vbmeta_vendor";flashimg=1
+
+
+# Common partition
+/boot            emmc    /dev/block/by-name/boot            flags=backup=1;display="Boot";flashimg=1
+/dtbo_a          emmc    /dev/block/by-name/dtbo_a          flags=backup=1;display="Dtbo";flashimg=1
+/persist         ext4    /dev/block/by-name/persist            flags=backup=1;display="Persist"
+/persist_image   emmc    /dev/block/by-name/persist            flags=backup=1;display="Persist Image";flashimg=1
+
+# MediaTek partitions
+/lk_a           emmc    /dev/block/by-name/lk_a             flags=backup=1;display="lk";flashimg=1
+/logo_a		    emmc	/dev/block/by-name/logo_a           flags=display="logo";backup=1;flashimg=1
+/misc           emmc    /dev/block/by-name/misc
+/expdb		    emmc	/dev/block/by-name/expdb            flags=display="expdb";backup=1
+/seccfg		    emmc	/dev/block/by-name/seccfg           flags=display="SecCfg";backup=1
+/proinfo	    emmc	/dev/block/by-name/proinfo          flags=display="Proinfo";backup=1
+
+# Non-Volatile (RAM | DATA | CFG)
+/nvcfg		    emmc	/dev/block/by-name/nvcfg            flags=display="NvCfg";backup=1
+/nvdata		    emmc	/dev/block/by-name/nvdata           flags=display="NvData";backup=1
+/nvram		    emmc	/dev/block/by-name/nvram            flags=display="NvRam";backup=1;flashimg=1
+
+#Trusted Execution Environment (TEE) - trustzone
+/tee_a		    emmc	/dev/block/by-name/tee_a            flags=display="Tee";backup=1;flashimg=1
+        
+# Firmware
+/gz_a           emmc    /dev/block/by-name/gz_a             flags=display="gz";backup=1
+
+# Factory Reset Protection (FRP)
+/frp	        emmc	/dev/block/by-name/frp              flags=display="frp";backup=1
+
+# Other partitions
+/spmfw_a		emmc	/dev/block/by-name/spmfw_a          flags=display="Spm";backup=1
+/sspm_a		    emmc	/dev/block/by-name/sspm_a           flags=display="sspm";backup=1
+/tranfs         emmc    /dev/block/by-name/tranfs           flags=display="tranfs";backup=1
+
+# Modem
+/md1img_a		emmc	/dev/block/by-name/md1img_a          flags=display="Modem";backup=1;flashimg=1
+
+# System Control Processor (SCP)
+/scp_a		    emmc	/dev/block/by-name/scp_a             flags=display="scp";backup=1        
+
+
+# External-Devices (SDCARD | OTG)
+/external_sd    auto     /dev/block/mmcblk1p1  /dev/block/mmcblk1 flags=display="External_SDcard";storage;wipeingui;removable;fsflags="utf8"
+/usb-otg            auto      /dev/block/sda1  /dev/block/sda     flags=display="USB OTG";storage;wipeingui;removable;fsflags="utf8
