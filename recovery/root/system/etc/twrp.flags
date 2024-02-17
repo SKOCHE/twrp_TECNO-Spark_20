@@ -14,6 +14,7 @@
 
 # Logical erofs partitions
 system          /system         erofs                            wait,logical,first_stage_mount
+system_ext      /system_ext     erofs                            wait,logical,first_stage_mount
 vendor          /vendor         erofs                            wait,logical,first_stage_mount
 product         /product        erofs                            wait,logical,first_stage_mount
 
