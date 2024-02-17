@@ -3,7 +3,7 @@
         device_framework_matrix.xml
         transsion_device_framework_matrix.xml
 -->
-<compatibility-matrix version="5.0" type="framework">
+<compatibility-matrix version="4.0" type="framework">
     <hal format="aidl" optional="true">
         <name>android.hardware.camera.provider</name>
         <interface>
