@@ -87,15 +87,9 @@ BOARD_AVB_RECOVERY_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 3
 
 # System as root
+BOARD_ROOT_EXTRA_FOLDERS := tranfs
 BOARD_SUPPRESS_SECURE_ERASE := true
-#BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
-
-# Additional binaries & libraries needed for recovery
-TARGET_RECOVERY_DEVICE_MODULES += \
-    libgatekeeper \
-    libgatekeeper_aidl \
-    libkeymaster41 \
-    libpuresoftkeymasterdevice
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 
 # Encryption
 PLATFORM_SECURITY_PATCH := 2099-12-31
@@ -105,15 +99,16 @@ VENDOR_SECURITY_PATCH := 2099-12-31
 # Metadata
 BOARD_USES_METADATA_PARTITION := true
 BOARD_ROOT_EXTRA_FOLDERS += postinstall
-BOARD_ROOT_EXTRA_FOLDERS += tranfs
+BOARD_ROOT_EXTRA_FOLDERS += metadata tranfs
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_BOOTIMAGE_PARTITION_SIZE := 33554432
 
 # Workaround for copying error vendor files to recovery ramdisk
+TARGET_COPY_OUT_SYSTEM := system
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_VENDOR := vendor
-TARGET_COPY_OUT_SYSTEM_EXT = system_ext
+TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 
 BOARD_SUPER_PARTITION_SIZE := 9126805504 # TODO: Fix hardcoded value
 BOARD_SUPER_PARTITION_GROUPS := tecno_dynamic_partitions
@@ -135,21 +130,20 @@ TARGET_USERIMAGES_USE_F2FS := true
 
 # Recovery
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
+TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
+TARGET_RECOVERY_INITRC := $(DEVICE_PATH)/recovery/root/init.recovery.mt6768.rc
 BOARD_USES_RECOVERY_AS_BOOT := true
 TARGET_NO_RECOVERY := true
 TW_NO_SCREEN_BLANK := true
-TW_HAS_NO_RECOVERY_PARTITION := true
 # TWRP specific build flags
 TW_THEME := portrait_hdpi
-TW_INCLUDE_CRYPTO := false
 RECOVERY_SDCARD_ON_DATA := true							  
 TARGET_USES_MKE2FS := true
-TW_INCLUDE_RESETPROP := true
-TW_INCLUDE_LIBRESETPROP := true
 TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
-#TW_EXTRA_LANGUAGES := false
+TW_EXTRA_LANGUAGES := false
+TW_BACKUP_EXCLUSIONS := /Files/fonts								  
 TW_INCLUDE_NTFS_3G := true
 TW_USE_TOOLBOX := true
 TW_DEVICE_VERSION := SPARK_20 by SK
@@ -169,14 +163,15 @@ TW_CUSTOM_CLOCK_POS := "70"
 TW_CUSTOM_BATTERY_POS := "790"
 
 # resetprop and magiskboot
-TW_INCLUDE_REPACKTOOLS := true
+TW_EXCLUDE_BASH := true
+TW_EXCLUDE_TZDATA := true						  
+TW_INCLUDE_REPACKTOOLS := false
+TW_NO_FASTBOOT_BOOT := true
+TW_EXCLUDE_PYTHON := true
+TW_EXCLUDE_NANO := true
+TW_EXCLUDE_LPTOOLS := true
+TW_EXCLUDE_LPDUMP := true		 
 TW_EXCLUDE_APEX := true
+TW_EXCLUDE_TWRPAPP := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.usb0/lun.%d/file
-TW_BACKUP_EXCLUSIONS := /data/fonts/files
-
-TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libgatekeeper.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libgatekeeper_aidl.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster41.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so							  
