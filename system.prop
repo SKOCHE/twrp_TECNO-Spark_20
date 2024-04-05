@@ -1,22 +1,24 @@
-#from device
-ro.board.platform=mt6768
-ro.vendor.mediatek.platform=MT6768
-ro.boot.hardware=mt6768
+# Identity hardware
+Build.BRAND=MTK
 ro.hardware=mt6768
-ro.vendor.mtk_f2fs_enable=0
-ro.vendor.mtk_emmc_support=1
-ro.vendor.mtk_ufs_support=1
+ro.vendor.mediatek.platform=MT6768
+ro.soc.manufacturer=Mediatek
+
+ro.vendor.mtk_f2fs_enable=1
+ro.hardware.egl=meow
 ro.sf.lcd_density=320
-#
-#others functions
-ro.secure=0
-ro.adb.secure=0
-ro.debuggable=1
-persist.sys.usb.config=mtp,adb
-persist.service.adb.enable=1
-persist.service.debuggable=1
-persist.sys.isUsbOtgEnabled=true
-ro.sys.usb.mtp.whql.enable=0
+ro.frp.pst=/dev/block/by-name/frp
+# ADB
+ro.adb.secure=1
+# USB
 ro.sys.usb.storage.type=mtp
-ro.boot.dynamic_partitions=true
-sys.usb.ffs.aio_compat=true
+# Crypto
+ro.crypto.volume.filenames_mode=aes-256-cts
+# TEE & Gatekeeper & Keymaster
+ro.mtk_key_manager_support=1
+ro.vendor.mtk_tee_gp_support=1
+ro.vendor.mtk_trustonic_tee_support=1
+ro.vendor.tran.trans_pay_tee=1
+ro.hardware.gatekeeper=trustonic
+ro.hardware.kmsetkey=trustonic
+ro.hardware.paytrigger=trustonic

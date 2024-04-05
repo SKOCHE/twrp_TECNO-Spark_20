@@ -1,0 +1,125 @@
+import /init.recovery.trustonic.rc
+
+on init
+    export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+
+on fs
+    mkdir /mnt/vendor/persist 0771 system system
+    mkdir /mnt/vendor/persist/mcRegistry 0771 system system
+    mkdir /mnt/vendor/persist/paytrigger
+    mkdir /data/vendor/key_provisioning 0771 system system
+    restorecon /mnt/vendor/persist
+    
+    install_keyring
+
+    write /sys/class/power_supply/usb/otg_switch 1
+    write /sys/class/oplus_chg/usb/otg_switch 1
+
+on post-fs
+    # Support A/B feature for EMMC and UFS boot region
+    symlink /dev/block/sda /dev/block/mmcblk0boot0
+    symlink /dev/block/sdb /dev/block/mmcblk0boot1
+    symlink /dev/block/mmcblk0boot0 /dev/block/platform/bootdevice/by-name/preloader_a
+    symlink /dev/block/mmcblk0boot1 /dev/block/platform/bootdevice/by-name/preloader_b
+    symlink /dev/block/mmcblk0boot0 /dev/block/by-name/preloader_a
+    symlink /dev/block/mmcblk0boot1 /dev/block/by-name/preloader_b
+
+    exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
+    
+    start mtk.plpath.utils.link
+
+on property:persist.vendor.mtk.pl_lnk=1
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+    symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
+
+service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
+    class main
+    user root
+    group root system
+    disabled
+    oneshot
+    seclabel u:r:recovery:s0
+
+service keystore_auth /system/bin/keystore_auth
+    oneshot
+    user system
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service keystore /system/bin/keystore /tmp/misc/keystore
+    user root
+    group root drmrpc readproc log
+    disabled
+    seclabel u:r:recovery:s0
+
+service tee-1-1 /vendor/bin/vendor.trustonic.tee@1.1-service
+    class hal
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service vendor.keymaster-4-1-trustonic /vendor/bin/android.hardware.keymaster@4.1-service.trustonic
+    class early_hal
+    user root
+    group root drmrpc
+    disabled
+    seclabel u:r:recovery:s0
+
+service vendor.gatekeeper-1-0 /vendor/bin/android.hardware.gatekeeper@1.0-service
+    interface android.hardware.gatekeeper@1.0::IGatekeeper default
+    class hal
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+on property:hwservicemanager.ready=true
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry ++ (FBE encrypted)"
+    mkdir /data/vendor/mcRegistry 0775 system system
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry -- (FBE encrypted)"
+    start mobicore
+    start tee-1-1
+    start vendor.keymaster-4-1-trustonic
+    start vendor.gatekeeper-1-0
+
+on property:ro.crypto.state=unsupported
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry ++ (unencrypted)"
+    mkdir /data/vendor/mcRegistry 0775 system system
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry -- (unencrypted)"
+    stop mobicore
+    stop tee-1-1
+    stop vendor.keymaster-4-1-trustonic
+    stop vendor.gatekeeper-1-0
+    stop servicemanager
+    stop hwservicemanager
+
+on property:ro.crypto.type=file && property:ro.crypto.state=unencrypted
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry ++ (unencrypted)"
+    mkdir /data/vendor/mcRegistry 0775 system system
+    write /proc/bootprof "MOBICORE: create /data/vendor/mcRegistry -- (unencrypted)"
+    stop mobicore
+    stop tee-1-1
+    stop vendor.keymaster-4-1-trustonic
+    stop vendor.gatekeeper-1-0
+    stop servicemanager
+    stop hwservicemanager
+
+on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
+    stop mobicore
+    stop tee-1-1
+    stop vendor.keymaster-4-1-trustonic
+    stop vendor.gatekeeper-1-0
+    stop servicemanager
+    stop hwservicemanager
+
+on post-fs-data
+    mkdir /data/vendor_de 0770 system system
+    mkdir /data/vendor_de/0 0770 system system 
+
+on boot
+     start boot-hal-1-1
+     start health-hal-2-1

@@ -1,0 +1,65 @@
+#fstab file by SK for Tecno Spark 20
+
+#<mnt_point>      <type>                <device>                                                 <mnt_flags and options>
+
+#Super section 
+/system_root       ext4         /dev/block/mapper/system                             flags=display="System";backup=1;flashimg=1;slotselect
+/vendor            ext4         /dev/block/mapper/vendor                             flags=display="Vendor";backup=1;flashimg=1;slotselect
+/product           ext4         /dev/block/mapper/product                            flags=display="Product";backup=1;flashimg=1;slotselect
+/system_ext        ext4         /dev/block/mapper/system_ext                         flags=display="System_ext";backup=1;flashimg=1;slotselect
+
+# Userdata/Metadata partitions
+/metadata          ext4         /dev/block/by-name/md_udc                            flags=display="Metadata";backup=1;flashimg=1
+/data              f2fs         /dev/block/by-name/userdata                          flags=display="Data";fileencryption=aes-256-xts:aes-256-cts:v2,keydirectory=/metadata/vold/metadata_encryption,
+
+# Other partitions
+/boot_para         emmc         /dev/block/by-name/boot_para                         flags=display="Boot_para";backup=1;flashimg=1
+/boot              emmc         /dev/block/by-name/boot                              flags=backup=1;display="Boot";flashimg=1;backup=1;slotselect
+
+# AVB partitions
+/dtbo              emmc         /dev/block/by-name/dtbo                              flags=display="Dtbo";backup=1;flashimg=1;slotselect
+/vbmeta            emmc         /dev/block/by-name/vbmeta                            flags=display="Vbmeta";backup=1;flashimg=1;slotselect
+/vbmeta_vendor     emmc         /dev/block/by-name/vbmeta_vendor                     flags=display="Vbmeta Vendor";slotselect;flashimg=1;slotselect
+/vbmeta_system     emmc         /dev/block/by-name/vbmeta_system                     flags=display="Vbmeta System";slotselect;flashimg=1;slotselect
+
+# Important partitions 
+/protect_f         ext4         /dev/block/by-name/protect1                          flags=display="Protect_f";backup=1;flashimg=1
+/protect_s         ext4         /dev/block/by-name/protect2                          flags=display="Protect_s";backup=1;flashimg=1
+/nvdata            ext4         /dev/block/by-name/nvdata                            flags=display="Nvdata";backup=1;flashimg=1
+/nvcfg             ext4         /dev/block/by-name/nvcfg                             flags=display="Nvcfg";backup=1;flashimg=1
+/persist           ext4         /dev/block/by-name/persist                           flags=display="Persist";backup=1;flashimg=1
+/persistent        emmc         /dev/block/by-name/frp                               flags=display="Persistent";backup=1;flashimg=1
+/nvram             emmc         /dev/block/by-name/nvram                             flags=display="Nvram";backup=1;flashimg=1
+/proinfo           emmc         /dev/block/by-name/proinfo                           flags=display="Proinfo";backup=1;flashimg=1
+
+# Persistent Firmware & Properties
+/tranfs            ext4         /dev/block/by-name/tranfs                            flags=display="Tranfs";backup=1;flashimg=1
+/bootloader        emmc         /dev/block/by-name/lk                                flags=display="Bootloader (lk)";backup=1;flashimg=1
+/bootloader2       emmc         /dev/block/by-name/lk2                               flags=display="Bootloader (lk2)";backup=1;flashimg=1
+/para              emmc         /dev/block/by-name/para                              flags=display="Para";backup=1;flashimg=1;slotselect
+/logo              emmc         /dev/block/by-name/logo                              flags=display="Logo";backup=1;flashimg=1;slotselect
+/expdb             emmc         /dev/block/by-name/expdb                             flags=display="Expdb";backup=1;flashimg=1
+/seccfg            emmc         /dev/block/by-name/seccfg                            flags=display="Seccfg";backup=1;flashimg=1
+/tee1              emmc         /dev/block/by-name/tee1                              flags=display="trustzone1";backup=1;flashimg=1
+/tee2              emmc         /dev/block/by-name/tee2                              flags=display="trustzone2";backup=1;flashimg=1
+/scp1              emmc         /dev/block/by-name/scp1                              flags=display="Scp1";backup=1;flashimg=1
+/scp2              emmc         /dev/block/by-name/scp2                              flags=display="Scp2";backup=1;flashimg=1
+/sspm_1            emmc         /dev/block/by-name/sspm_1                            flags=display="Sspm_1";backup=1;flashimg=1
+/sspm_2            emmc         /dev/block/by-name/sspm_2                            flags=display="Sspm_2";backup=1;flashimg=1
+/gz1               emmc         /dev/block/by-name/gz1                               flags=display="Gz1";backup=1;flashimg=1
+/gz2               emmc         /dev/block/by-name/gz2                               flags=display="Gz2";backup=1;flashimg=1
+/spmfw             emmc         /dev/block/by-name/spmfw                             flags=display="Spmfw";backup=1;flashimg=1;slotselect
+/otp               emmc         /dev/block/by-name/otp                               flags=display="Otp";backup=1;flashimg=1
+/tkv               emmc         /dev/block/by-name/tkv                               flags=display="Tkv";backup=1;flashimg=1
+/misc              emmc         /dev/block/by-name/misc                              flags=display="Misc";backup=1;flashimg=1
+
+# Modem partitions
+/md1img            emmc         /dev/block/by-name/md1img                            flags=display="Md1img";backup=1;flashimg=1;slotselect
+/md1dsp            emmc         /dev/block/by-name/md1dsp                            flags=display="Md1dsp";backup=1;flashimg=1;slotselect
+
+# Empty section 
+/vendor_boot       emmc         /dev/block/by-name/vendor_boot                       flags=display="Vendor Boot (Empty section)";backup=1;flashimg=1;slotselect
+
+# Removable Storage
+/external_sd       auto         /dev/block/mmcblk1p1  /dev/block/mmcblk0p1           flags=display="MicroSDcard";storage;wipeingui;removable
+/usb_otg           auto         /dev/block/sda1  /dev/block/sda   /dev/block/sdd1    flags=display="USB OTG";storage;wipeingui;removable
