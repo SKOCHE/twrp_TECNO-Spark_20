@@ -159,12 +159,13 @@ TW_EXCLUDE_LPDUMP := true
 TW_NO_SCREEN_BLANK := true
 TARGET_USES_MKE2FS := true
 TW_INCLUDE_NTFS_3G := true
-TW_USE_TOOLBOX := true
+TW_INCLUDE_RESETPROP := true
+TW_INCLUDE_REPACK_TOOL := true
 
 # TWRP-Specific configuration
 TW_EXCLUDE_TWRPAPP := true
 TW_EXCLUDE_APEX := true
-#TW_OEM_BUILD := true
+
 
 # Density / StatusBar
 TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
